@@ -78,8 +78,8 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
-        self.encrypt_original.setText(QCoreApplication.translate("MainWindow", u"TextLabel", None))
-        self.encrypt_result.setText(QCoreApplication.translate("MainWindow", u"TextLabel", None))
+        self.encrypt_original.setText("")
+        self.encrypt_result.setText("")
         self.encrypt_open.setText(QCoreApplication.translate("MainWindow", u"Abrir imagen", None))
         self.encrypt_save.setText(QCoreApplication.translate("MainWindow", u"Guardar imagen", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), QCoreApplication.translate("MainWindow", u"Encriptar", None))
