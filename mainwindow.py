@@ -2,6 +2,7 @@ from PySide2 import QtCore
 from PySide2.QtWidgets import QLineEdit, QMainWindow, QFileDialog ,QMessageBox, QInputDialog
 from PySide2.QtCore import Slot
 from PySide2.QtGui import QPixmap
+from numpy.core.numeric import full
 from ui_mainwindow import Ui_MainWindow
 import numpy as np
 from PIL import Image
@@ -29,8 +30,9 @@ class MainWindow(QMainWindow):
         print('Size: ' + str(image.size))
         print('Mode: ' + image.mode)
 
-        data = np.asarray(image)
+        data = np.uint8(np.array(image))
         print(data.shape)
+        print(data)
         return image, data
 
     def decrypt_image(self,location,key):
@@ -58,7 +60,7 @@ class MainWindow(QMainWindow):
                 colors = []
                 for color in pixel:                                 #Loop through channels
                     #New pixel 
-                    c = algorithm.code_8_bit(color,key,counter)
+                    c = algorithm.code_8_bit(color,key,full_counter)
                     colors.append(c)
 
                 aux += 1
@@ -68,7 +70,7 @@ class MainWindow(QMainWindow):
                     if len(columns) == n_h:
                         rows.append(columns)
                         columns = []
-                        value = int(index/ len(data) * 100)
+                        value = int(index / len(data) * 100)
                         if value != self.ui.decryption_progress.value() != value:
                             self.ui.decryption_progress.setValue(value)
                 
@@ -79,7 +81,7 @@ class MainWindow(QMainWindow):
         print(len(rows[0][0]))
         print("Desencrypted!")
         print(f"Counter = {counter}, full = {full_counter}")
-        self.ui.decrypt_result.setEnabled(True)
+        self.ui.decrypt_save.setEnabled(True)
         self.ui.decryption_progress.setValue(100)
 
         count = 0
@@ -99,7 +101,7 @@ class MainWindow(QMainWindow):
         print(f"Final count = {count}, errors = {errors}")
 
         decoded_image = np.array(rows)
-        img = Image.fromarray(np.uint8(decoded_image))
+        img = Image.fromarray(np.uint8(decoded_image),image.mode)
 
         filename = 'temp/decoded.' + str(image.format).lower()
         img.save(filename)
@@ -126,11 +128,11 @@ class MainWindow(QMainWindow):
         de las dos dimensiones y el elemento "n" de la serie 
         fibonacci
         """
+
         offset = algorithm.fibbonaci(len(key))
         print(f"Offset = {offset}")
         
         n_h = len(data[0]) + offset               #New height
-
         print(f"nh = {n_h}")
 
         # offset = algorithm.fibbonaci(offset)
@@ -141,20 +143,23 @@ class MainWindow(QMainWindow):
 
         counter = 0
         full_counter = 0
+        total_black = 0
 
         for (index, dimension) in enumerate(data):              #Loop through x axix
             for pixel in dimension:                             #Loop through y axis
                 colors = []
                 for color in pixel:                             #Loop through channels
                     #New pixel 
-                    c = algorithm.code_8_bit(color,key,counter) 
+                    c = algorithm.code_8_bit(color,key,full_counter) 
+                    c = color
                     colors.append(c)
                 if  full_counter % offset == 0:   #Ignored pixel
+                        
                     full_counter += 1
                     ignored_pixel = []
                     for x in colors:
-                        # ignored_pixel.append( x * len(columns) % 255)
-                        ignored_pixel.append(0)
+                        ignored_pixel.append( x * len(columns) % 255)
+                        # ignored_pixel.append(0)
                     columns.append(ignored_pixel)
                     if len(columns) == n_h:
                         rows.append(columns)
@@ -181,7 +186,7 @@ class MainWindow(QMainWindow):
         self.ui.encryption_progress.setValue(100)
 
         decoded_image = np.array(rows)
-        img = Image.fromarray(np.uint8(decoded_image))
+        img = Image.fromarray(np.uint8(decoded_image),image.mode)
 
         filename = 'temp/encoded.' + str(image.format).lower()
 
@@ -232,7 +237,7 @@ class MainWindow(QMainWindow):
                     QLineEdit.Password
                 )[0]
 
-            self.decrypt_image(location,key)
+            self.decrypt_image(location,str(key))
 
         else:
             QMessageBox.critical(
@@ -267,7 +272,7 @@ class MainWindow(QMainWindow):
                     QLineEdit.Password
                 )[0]
 
-            self.encrypt_image(location,key)
+            self.encrypt_image(location,str(key))
 
         else:
             QMessageBox.critical(

@@ -23,19 +23,11 @@ def reverse_fibonacci(number):
 """
 Cifrado XOR con una clave y una posición
 """
-
-def decode_8_bit(value,key,position) -> int:
-    # return value
-    return decode_8_bit(value,key,position)
-    if value == 0:
-        return 255
-    return value - 1
-
 def code_8_bit(value,key,position) -> int:
-    return value
-    # if value == 255:
-    #     return 0
-    # return value + 1
+    # return value
+    if value == 255:
+        return 0
+    return value + 1
 
     position = position % len(key) 
     key = ord(key[position])            #Get ASCII code
