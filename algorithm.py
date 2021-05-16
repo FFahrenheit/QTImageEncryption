@@ -32,7 +32,7 @@ def decode_8_bit(value,key,position) -> int:
     return value - 1
 
 def code_8_bit(value,key,position) -> int:
-    # return value
+    return value
     # if value == 255:
     #     return 0
     # return value + 1
