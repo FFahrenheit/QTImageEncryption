@@ -17,13 +17,14 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(716, 466)
+        MainWindow.resize(715, 420)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.gridLayout_2 = QGridLayout(self.centralwidget)
         self.gridLayout_2.setObjectName(u"gridLayout_2")
         self.tabWidget = QTabWidget(self.centralwidget)
         self.tabWidget.setObjectName(u"tabWidget")
+        self.tabWidget.setTabBarAutoHide(False)
         self.tab = QWidget()
         self.tab.setObjectName(u"tab")
         self.gridLayout = QGridLayout(self.tab)
@@ -52,6 +53,15 @@ class Ui_MainWindow(object):
 
         self.gridLayout.addWidget(self.encrypt_save, 1, 1, 1, 1)
 
+        self.encryption_progress = QProgressBar(self.tab)
+        self.encryption_progress.setObjectName(u"encryption_progress")
+        self.encryption_progress.setEnabled(True)
+        self.encryption_progress.setValue(0)
+        self.encryption_progress.setTextVisible(False)
+        self.encryption_progress.setInvertedAppearance(False)
+
+        self.gridLayout.addWidget(self.encryption_progress, 2, 0, 1, 2)
+
         self.tabWidget.addTab(self.tab, "")
         self.tab_2 = QWidget()
         self.tab_2.setObjectName(u"tab_2")
@@ -62,7 +72,7 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 716, 21))
+        self.menubar.setGeometry(QRect(0, 0, 715, 21))
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QStatusBar(MainWindow)
         self.statusbar.setObjectName(u"statusbar")

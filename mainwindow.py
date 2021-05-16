@@ -44,6 +44,7 @@ class MainWindow(QMainWindow):
         return 0 
 
     def encrypt_image(self,location,key):
+        self.ui.encryption_progress.setValue(0)
         image, data = self.get_array(location)
 
         """
@@ -78,25 +79,28 @@ class MainWindow(QMainWindow):
                     if len(columns) == n_h:
                         rows.append(columns)
                         columns = []
+                        value = len(rows) / n_w * 100 
+                        self.ui.encryption_progress.setValue(value)
                         
                 columns.append(colors)
                 if len(columns) == n_h:
                     rows.append(columns)
                     columns = []
-        
-        # print(counter)
-        
-        # print(len(rows))
-        # print(len(rows[0]))
-        # print(len(rows[0][0]))
-        # print(len(rows[len(rows)-1]))
+                    value = len(rows) / n_w * 100 
+                    self.ui.encryption_progress.setValue(value)
 
         print("Encrypted!")
 
         decoded_image = np.array(rows)
         img = Image.fromarray(decoded_image, image.mode)
         img.save('temp/decoded.png')
-        img.show()
+
+        w = self.ui.encrypt_result.width()
+        h = self.ui.encrypt_result.height()
+
+        image  = QPixmap('temp/decoded.png')
+        self.ui.encrypt_result.setPixmap(image.scaled(w,h,QtCore.Qt.KeepAspectRatio))
+        self.ui.encrypt_result.setMask(image.mask())
 
 
     def code_8_bit(self,value,key,position):
