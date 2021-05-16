@@ -33,6 +33,7 @@ class Ui_MainWindow(object):
         self.encrypt_result.setObjectName(u"encrypt_result")
         self.encrypt_result.setFrameShape(QFrame.WinPanel)
         self.encrypt_result.setFrameShadow(QFrame.Sunken)
+        self.encrypt_result.setAlignment(Qt.AlignCenter)
 
         self.gridLayout.addWidget(self.encrypt_result, 0, 1, 1, 1)
 
@@ -45,6 +46,7 @@ class Ui_MainWindow(object):
         self.encrypt_original.setObjectName(u"encrypt_original")
         self.encrypt_original.setFrameShape(QFrame.WinPanel)
         self.encrypt_original.setFrameShadow(QFrame.Sunken)
+        self.encrypt_original.setAlignment(Qt.AlignCenter)
 
         self.gridLayout.addWidget(self.encrypt_original, 0, 0, 1, 1)
 
@@ -64,6 +66,42 @@ class Ui_MainWindow(object):
         self.tabWidget.addTab(self.tab, "")
         self.tab_2 = QWidget()
         self.tab_2.setObjectName(u"tab_2")
+        self.gridLayout_3 = QGridLayout(self.tab_2)
+        self.gridLayout_3.setObjectName(u"gridLayout_3")
+        self.decrypt_original = QLabel(self.tab_2)
+        self.decrypt_original.setObjectName(u"decrypt_original")
+        self.decrypt_original.setFrameShape(QFrame.WinPanel)
+        self.decrypt_original.setFrameShadow(QFrame.Sunken)
+        self.decrypt_original.setAlignment(Qt.AlignCenter)
+
+        self.gridLayout_3.addWidget(self.decrypt_original, 0, 0, 1, 1)
+
+        self.decrypt_result = QLabel(self.tab_2)
+        self.decrypt_result.setObjectName(u"decrypt_result")
+        self.decrypt_result.setFrameShape(QFrame.WinPanel)
+        self.decrypt_result.setFrameShadow(QFrame.Sunken)
+        self.decrypt_result.setAlignment(Qt.AlignCenter)
+
+        self.gridLayout_3.addWidget(self.decrypt_result, 0, 1, 1, 1)
+
+        self.decrypt_open = QPushButton(self.tab_2)
+        self.decrypt_open.setObjectName(u"decrypt_open")
+
+        self.gridLayout_3.addWidget(self.decrypt_open, 1, 0, 1, 1)
+
+        self.decrypt_save = QPushButton(self.tab_2)
+        self.decrypt_save.setObjectName(u"decrypt_save")
+
+        self.gridLayout_3.addWidget(self.decrypt_save, 1, 1, 1, 1)
+
+        self.decryption_progress = QProgressBar(self.tab_2)
+        self.decryption_progress.setObjectName(u"decryption_progress")
+        self.decryption_progress.setEnabled(True)
+        self.decryption_progress.setValue(0)
+        self.decryption_progress.setTextVisible(False)
+
+        self.gridLayout_3.addWidget(self.decryption_progress, 2, 0, 1, 2)
+
         self.tabWidget.addTab(self.tab_2, "")
 
         self.gridLayout_2.addWidget(self.tabWidget, 0, 0, 1, 1)
@@ -92,6 +130,10 @@ class Ui_MainWindow(object):
         self.encrypt_original.setText(QCoreApplication.translate("MainWindow", u"Imagen original", None))
         self.encrypt_save.setText(QCoreApplication.translate("MainWindow", u"Guardar imagen", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), QCoreApplication.translate("MainWindow", u"Encriptar", None))
+        self.decrypt_original.setText(QCoreApplication.translate("MainWindow", u"Imagen original", None))
+        self.decrypt_result.setText(QCoreApplication.translate("MainWindow", u"Imagen desencriptada", None))
+        self.decrypt_open.setText(QCoreApplication.translate("MainWindow", u"Abrir imagen", None))
+        self.decrypt_save.setText(QCoreApplication.translate("MainWindow", u"Guardar imagen", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), QCoreApplication.translate("MainWindow", u"Desencriptar", None))
     # retranslateUi
 
