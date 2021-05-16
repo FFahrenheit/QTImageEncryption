@@ -28,19 +28,6 @@
         <string>Encriptar</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout">
-        <item row="0" column="0">
-         <widget class="QLabel" name="encrypt_original">
-          <property name="frameShape">
-           <enum>QFrame::WinPanel</enum>
-          </property>
-          <property name="frameShadow">
-           <enum>QFrame::Sunken</enum>
-          </property>
-          <property name="text">
-           <string/>
-          </property>
-         </widget>
-        </item>
         <item row="0" column="1">
          <widget class="QLabel" name="encrypt_result">
           <property name="frameShape">
@@ -50,7 +37,7 @@
            <enum>QFrame::Sunken</enum>
           </property>
           <property name="text">
-           <string/>
+           <string>Imagen encriptada</string>
           </property>
          </widget>
         </item>
@@ -61,10 +48,16 @@
           </property>
          </widget>
         </item>
-        <item row="1" column="1">
-         <widget class="QPushButton" name="encrypt_save">
+        <item row="0" column="0">
+         <widget class="QLabel" name="encrypt_original">
+          <property name="frameShape">
+           <enum>QFrame::WinPanel</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Sunken</enum>
+          </property>
           <property name="text">
-           <string>Guardar imagen</string>
+           <string>Imagen original</string>
           </property>
          </widget>
         </item>
@@ -79,8 +72,12 @@
           <property name="textVisible">
            <bool>false</bool>
           </property>
-          <property name="invertedAppearance">
-           <bool>false</bool>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QPushButton" name="encrypt_save">
+          <property name="text">
+           <string>Guardar imagen</string>
           </property>
          </widget>
         </item>

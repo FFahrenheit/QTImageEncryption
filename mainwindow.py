@@ -1,11 +1,11 @@
 from PySide2 import QtCore
 from PySide2.QtWidgets import QLineEdit, QMainWindow, QFileDialog ,QMessageBox, QInputDialog
-from PySide2.QtCore import QLine, Slot
+from PySide2.QtCore import Slot
 from PySide2.QtGui import QPixmap
 from ui_mainwindow import Ui_MainWindow
 import numpy as np
 from PIL import Image
-import random
+import algorithm
 
 class MainWindow(QMainWindow):
 
@@ -16,6 +16,9 @@ class MainWindow(QMainWindow):
         self.ui.setupUi(self)
 
         self.ui.encrypt_open.clicked.connect(self.load_image)
+
+        self.ui.encryption_progress.setVisible(False)
+        self.ui.encrypt_save.setEnabled(False)
         
     def get_array(self,location):
         image = Image.open(location)
@@ -27,23 +30,8 @@ class MainWindow(QMainWindow):
         print(data.shape)
         return image, data
 
-    def fibbonaci(self,number):
-        a, b = 0, 1
-        for _ in range(number):
-            a, b = b, a+b
-        return b
-
-    def reverse_fibonacci(self,number):
-        a, b = 0, 1
-        counter = 0
-        while number >= b:
-            if number == b:
-                return counter
-            a, b = b, a+b
-            counter += 1
-        return 0 
-
     def encrypt_image(self,location,key):
+        self.ui.encryption_progress.setVisible(True)
         self.ui.encryption_progress.setValue(0)
         image, data = self.get_array(location)
 
@@ -52,7 +40,7 @@ class MainWindow(QMainWindow):
         de las dos dimensiones y el elemento "n" de la serie 
         fibonacci
         """
-        offset = self.fibbonaci(len(key))
+        offset = algorithm.fibbonaci(len(key))
         print(f"Offset = {offset}")
         """
 
@@ -68,8 +56,10 @@ class MainWindow(QMainWindow):
             for pixel in dimension:         #Loop through y axis
                 colors = []
                 for color in pixel:             #Loop through channels
-                    c = self.code_8_bit(color,key,counter) #New pixel
+                    #New pixel 
+                    c = algorithm.code_8_bit(color,key,counter) 
                     colors.append(c)
+
                 counter += 1
                 if counter % offset == 0:   #Ignored pixel
                     ignored_pixel = []
@@ -79,48 +69,33 @@ class MainWindow(QMainWindow):
                     if len(columns) == n_h:
                         rows.append(columns)
                         columns = []
-                        value = len(rows) / n_w * 100 
+                        value = int(len(rows) / n_w * 100) 
                         self.ui.encryption_progress.setValue(value)
                         
                 columns.append(colors)
                 if len(columns) == n_h:
                     rows.append(columns)
                     columns = []
-                    value = len(rows) / n_w * 100 
+                    value = int(len(rows) / n_w * 100)
                     self.ui.encryption_progress.setValue(value)
 
         print("Encrypted!")
+        self.ui.encrypt_save.setEnabled(True)
 
         decoded_image = np.array(rows)
         img = Image.fromarray(decoded_image, image.mode)
-        img.save('temp/decoded.png')
+
+        filename = 'temp/decoded.png'
+        img.save(filename)
 
         w = self.ui.encrypt_result.width()
         h = self.ui.encrypt_result.height()
 
-        image  = QPixmap('temp/decoded.png')
+        image = QPixmap(filename)
+
         self.ui.encrypt_result.setPixmap(image.scaled(w,h,QtCore.Qt.KeepAspectRatio))
         self.ui.encrypt_result.setMask(image.mask())
-
-
-    def code_8_bit(self,value,key,position):
-        """XOR CYPHER"""
-        position = position % len(key) 
-        key = ord(key[position])            #Get ASCII code
-        value = '{0:08b}'.format(value)
-        key = '{0:08b}'.format(key)
-
-        result = []
-        for i in range(len(value)):
-            if value[i] == key[i]:
-                result += "1"
-            else:
-                result += "0"
-        result = "".join( str(bit) for bit in result )
-        return int(result,2) 
-
-
-
+ 
     @Slot()
     def load_image(self):
         location = QFileDialog.getOpenFileName(
@@ -137,13 +112,15 @@ class MainWindow(QMainWindow):
             image  = QPixmap(location)
             self.ui.encrypt_original.setPixmap(image.scaled(w,h,QtCore.Qt.KeepAspectRatio))
             self.ui.encrypt_original.setMask(image.mask())
-             
-            key = QInputDialog.getText(
-                self,
-                'Encriptar imagen',
-                'Inserte su clave para encriptar',
-                QLineEdit.Password
-            )[0]
+            
+            key = ''
+            while key == '':
+                key = QInputDialog.getText(
+                    self,
+                    'Encriptar imagen',
+                    'Inserte su clave para encriptar',
+                    QLineEdit.Password
+                )[0]
 
             self.encrypt_image(location,key)
 
