@@ -24,10 +24,8 @@ def reverse_fibonacci(number):
 Cifrado XOR con una clave y una posición
 """
 def code_8_bit(value,key,position) -> int:
-    # return value
-    if value == 255:
-        return 0
-    return value + 1
+
+    return value
 
     position = position % len(key) 
     key = ord(key[position])            #Get ASCII code
@@ -37,9 +35,9 @@ def code_8_bit(value,key,position) -> int:
     result = []
     for i in range(len(value)):
         if value[i] == key[i]:
-            result += "1"
+            result += '1'
         else:
-            result += "0"
+            result += '0'
     result = "".join( str(bit) for bit in result )
 
     return int(result,2)
