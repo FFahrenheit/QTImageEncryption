@@ -7,7 +7,6 @@ import numpy as np
 from PIL import Image
 import algorithm
 import random
-import matplotlib.image
 
 class MainWindow(QMainWindow):
 
@@ -78,7 +77,7 @@ class MainWindow(QMainWindow):
         image, data = self.get_array(location)
         self.dec_original = image
 
-        offset = algorithm.fibbonaci(len(key))
+        offset = algorithm.get_offset(key)
 
         n_h = len(data[0]) - offset
 
@@ -146,7 +145,7 @@ class MainWindow(QMainWindow):
         fibonacci
         """
 
-        offset = algorithm.fibbonaci(len(key))
+        offset = algorithm.get_offset(key)
         
         n_h = len(data[0]) + offset               #New height
 

@@ -8,6 +8,19 @@ def fibbonaci(n):
         return b
 
 """
+Get offset to random images
+"""
+def get_offset(key):
+    offset = fibbonaci(len(key))
+    module = 0
+
+    for index , k in enumerate(key):
+        module += ord(k)
+        offset += index * ord(k) 
+
+    return offset % module
+
+"""
 Obtiene la posición del número fibonacci number
 """
 def reverse_fibonacci(number):
@@ -24,8 +37,6 @@ def reverse_fibonacci(number):
 Cifrado XOR con una clave y una posición
 """
 def code_8_bit(value,key,position) -> int:
-
-    return value
 
     position = position % len(key) 
     key = ord(key[position])            #Get ASCII code
