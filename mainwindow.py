@@ -64,14 +64,12 @@ class MainWindow(QMainWindow):
 
     def get_array(self,location):
         image = Image.open(location).convert('RGB')
-        # print(image.format)
-        # print('Format: ' + image.format)
         print('Size: ' + str(image.size))
         print('Mode: ' + image.mode)
 
         data = np.uint8(np.array(image))
         print(data.shape)
-        # print(data)
+
         return image, data
 
     def decrypt_image(self,location,key):
@@ -97,16 +95,13 @@ class MainWindow(QMainWindow):
                 aux += 1
 
                 if full_counter % offset != 0:
-                    if full_counter < 20:
-                        print(f"pixel = {str(pixel)}")
+
                     for color in pixel:                                 #Loop through channels
                     #New pixel 
                         c = algorithm.code_8_bit(color,key,full_counter)
                         colors.append(c)
                     counter += 1
                     columns.append(colors)
-                    if full_counter < 20:
-                        print(f"color = {str(colors)}")
 
                     if len(columns) == n_h:
                         rows.append(columns)
@@ -118,17 +113,13 @@ class MainWindow(QMainWindow):
                 full_counter += 1
 
         print("Desencrypted!")
-        print(f"Full counter = {full_counter}")
         self.ui.decrypt_save.setEnabled(True)
         self.ui.decryption_progress.setValue(100)
-
-        for i in range(20):
-            print(str(rows[0][i]))
 
         decoded_image = np.uint8(np.array(rows))
         img = Image.fromarray(decoded_image.astype('uint8'),image.mode)
 
-        filename = 'temp/decoded.png' #+ str(image.format).lower()
+        filename = 'temp/decoded.png'
         img.save(filename)
         self.decrypted_img = img
 
@@ -168,19 +159,17 @@ class MainWindow(QMainWindow):
         for (index, dimension) in enumerate(data):              #Loop through x axix
             for pixel in dimension:                             #Loop through y axis
                 colors = []
-                if full_counter < 20:
-                    print(f"pixel = {str(pixel)}")
+
                 for color in pixel:                             #Loop through channels
                     c = algorithm.code_8_bit(color,key,full_counter) 
                     colors.append(c)
-                if full_counter < 20:
-                    print(f"color = {str(colors)}")
+
                 if  full_counter % offset == 0:   #Ignored pixel
-                        
+
                     full_counter += 1
                     ignored_pixel = []
                     for _ in colors:
-                        ignored_pixel.append(0)
+                        ignored_pixel.append(random.randint(0,255))
                     columns.append(ignored_pixel)
                     if len(columns) == n_h:
                         rows.append(columns)
@@ -202,27 +191,18 @@ class MainWindow(QMainWindow):
             rows.append(columns)
         
         print("Encrypted!")
-        print(f"Full counter {full_counter}")
-
-        for i in range(20):
-            print(str(rows[0][i]))
 
         self.ui.encrypt_save.setEnabled(True)
         self.ui.encryption_progress.setValue(100)
 
-        decoded_image = np.uint8(np.array(rows))
-        img = Image.fromarray(decoded_image.astype('uint8'), 'RGB')
+        encoded_image = np.uint8(np.array(rows))
+        img = Image.fromarray(encoded_image.astype('uint8'), 'RGB')
         
-        for i in range(20):
-            print(str(decoded_image[0][i]))
-        
-        filename = 'temp/encoded.png' #+ str(image.format).lower()
+        filename = 'temp/encoded.png' 
 
         self.encrypted_img = img
 
-        # img.save(filename)
-
-        matplotlib.image.imsave(filename,decoded_image, vmin=0, vmax=255)
+        img.save(filename)
 
         w = self.ui.encrypt_result.width()
         h = self.ui.encrypt_result.height()
@@ -232,10 +212,7 @@ class MainWindow(QMainWindow):
         self.ui.encrypt_result.setPixmap(image.scaled(w,h,QtCore.Qt.KeepAspectRatio))
         self.ui.encrypt_result.setMask(image.mask())
 
-        imge, data = self.get_array(filename)
-
-        for i in range(20):
-            print(str(data[0][i]))
+        self.get_array(filename)
 
  
     @Slot()
@@ -243,7 +220,7 @@ class MainWindow(QMainWindow):
         location = QFileDialog.getOpenFileName(
             self,
             'Abrir archivo',
-            '.',
+            './temp',
             'Image Files (*.png *.jpg *.jpeg *.bmp *.tif)'
         )[0]
 
@@ -278,7 +255,7 @@ class MainWindow(QMainWindow):
         location = QFileDialog.getOpenFileName(
             self,
             'Abrir archivo',
-            '.',
+            './examples',
             'Image Files (*.png *.jpg *.jpeg *.bmp *.tif)'
         )[0]
 
