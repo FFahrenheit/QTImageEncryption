@@ -19,7 +19,7 @@ def get_offset(key):
 
     for index , k in enumerate(key):
         module += ord(k)
-        offset += index * ord(k) 
+        offset += (index + 1) * ord(k)
 
     return offset % module
 
@@ -44,7 +44,7 @@ def code_8_bit(value,key,position) -> int:
     pos = position % len(key) 
     key = ord(key[pos])            #Get ASCII code
     
-    return ((xor(value,key) + position) % 256)
+    return (xor(value,key) + position) % 256
 
 
 def decode_8_bit(value,key,position) -> int:
@@ -53,4 +53,4 @@ def decode_8_bit(value,key,position) -> int:
     key = ord(key[pos])            #Get ASCII code
     value = value - position
     
-    return (xor(value,key) % 256)
+    return xor(value,key) % 256

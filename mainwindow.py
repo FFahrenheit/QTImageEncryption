@@ -79,32 +79,29 @@ class MainWindow(QMainWindow):
 
         offset = algorithm.get_offset(key)
 
-        n_h = len(data[0]) - offset
+        n_w = len(data[0]) - offset
 
         rows = []
         columns = []
 
         counter = 0
-        aux = 0
         full_counter = 0
 
         for (index,dimension) in enumerate(data):                   #Loop through x axix
             for pixel in dimension:                                 #Loop through y axis
-                aux += 1
 
                 if full_counter % offset != 0:
 
                     colors = [None]*len(pixel)
 
                     for i,color in enumerate(pixel):                                 #Loop through channels
-                    #New pixel 
+                        #New pixel 
                         c = algorithm.decode_8_bit(color,key,full_counter)
                         colors[len(pixel) - 1 - i] = c
-                        # colors[i] = c
                     counter += 1
                     columns.append(colors)
 
-                    if len(columns) == n_h:
+                    if len(columns) == n_w:
                         rows.append(columns)
                         columns = []
                         value = int(index / len(data) * 100)
@@ -149,7 +146,7 @@ class MainWindow(QMainWindow):
 
         offset = algorithm.get_offset(key)
         
-        n_h = len(data[0]) + offset               #New height
+        n_w = len(data[0]) + offset               #New width
 
         rows = []
         columns = []
@@ -164,7 +161,6 @@ class MainWindow(QMainWindow):
                 for i, color in enumerate(pixel):                             #Loop through channels
                     c = algorithm.code_8_bit(color,key,full_counter) 
                     colors[len(pixel) - 1 - i ] = c
-                    # colors[i] = c
 
                 if  full_counter % offset == 0:   #Ignored pixel
 
@@ -173,14 +169,14 @@ class MainWindow(QMainWindow):
                     for _ in colors:
                         ignored_pixel.append(random.randint(0,255))
                     columns.append(ignored_pixel)
-                    if len(columns) == n_h:
+                    if len(columns) == n_w:
                         rows.append(columns)
                         columns = []
                 counter += 1
                 full_counter += 1
 
                 columns.append(colors)
-                if len(columns) == n_h:
+                if len(columns) == n_w:
                     rows.append(columns)
                     columns = []
                     value = int(index/len(data)*100)
@@ -188,7 +184,7 @@ class MainWindow(QMainWindow):
                         self.ui.encryption_progress.setValue(value)
 
         if len(columns) > 0:
-            for _ in range(n_h - len(columns)):
+            for _ in range(n_w - len(columns)):
                 columns.append([0, 0, 0])
             rows.append(columns)
         
