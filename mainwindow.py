@@ -90,15 +90,17 @@ class MainWindow(QMainWindow):
 
         for (index,dimension) in enumerate(data):                   #Loop through x axix
             for pixel in dimension:                                 #Loop through y axis
-                colors = []
                 aux += 1
 
                 if full_counter % offset != 0:
 
-                    for color in pixel:                                 #Loop through channels
+                    colors = [None]*len(pixel)
+
+                    for i,color in enumerate(pixel):                                 #Loop through channels
                     #New pixel 
-                        c = algorithm.code_8_bit(color,key,full_counter)
-                        colors.append(c)
+                        c = algorithm.decode_8_bit(color,key,full_counter)
+                        colors[len(pixel) - 1 - i] = c
+                        # colors[i] = c
                     counter += 1
                     columns.append(colors)
 
@@ -157,11 +159,12 @@ class MainWindow(QMainWindow):
 
         for (index, dimension) in enumerate(data):              #Loop through x axix
             for pixel in dimension:                             #Loop through y axis
-                colors = []
+                colors = [None]*len(pixel)
 
-                for color in pixel:                             #Loop through channels
+                for i, color in enumerate(pixel):                             #Loop through channels
                     c = algorithm.code_8_bit(color,key,full_counter) 
-                    colors.append(c)
+                    colors[len(pixel) - 1 - i ] = c
+                    # colors[i] = c
 
                 if  full_counter % offset == 0:   #Ignored pixel
 
@@ -232,13 +235,14 @@ class MainWindow(QMainWindow):
             self.ui.decrypt_original.setMask(image.mask())
             
             key = ''
-            while len(key) < 2:
-                key = QInputDialog.getText(
+            ok = True
+            while ok and len(key) < 2:
+                key, ok  = QInputDialog.getText(
                     self,
                     'Desencriptar imagen',
                     'Inserte su clave para desencriptar',
                     QLineEdit.Password
-                )[0]
+                )
 
             self.decrypt_image(location,str(key))
 
@@ -267,15 +271,16 @@ class MainWindow(QMainWindow):
             self.ui.encrypt_original.setMask(image.mask())
             
             key = ''
-            while len(key) < 2:
-                key = QInputDialog.getText(
+            ok = True
+            while ok and len(key) < 2:
+                key,ok = QInputDialog.getText(
                     self,
                     'Encriptar imagen',
                     'Inserte su clave para encriptar',
                     QLineEdit.Password
-                )[0]
-
-            self.encrypt_image(location,str(key))
+                )
+            if ok:
+                self.encrypt_image(location,str(key))
 
         else:
             QMessageBox.critical(
